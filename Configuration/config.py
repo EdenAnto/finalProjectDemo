@@ -27,27 +27,19 @@ class VideoDetectionCls:
     def updateProcessing(self, update):
         self.processing = update
     
-        
+  import os
+from logging.handlers import RotatingFileHandler
+import logging
 
-def setup_logger(name, log_file, level=logging.INFO):
-    logPath = f'{log_file}/{name}.log'
-    os.makedirs(os.path.dirname(logPath), exist_ok=True)
-
-    handler = RotatingFileHandler(logPath, maxBytes=1024*1024*10, backupCount=5)
-    handler.setLevel(level)
-    formatter = logging.Formatter('%(asctime)s \t %(levelname)s: %(message)s \t [in %(pathname)s:%(lineno)d]')
-    handler.setFormatter(formatter)
-    
+def setup_logger(name, logPath):
+    # Use /tmp directory for logs in environments with read-only filesystems
+    writable_log_path = logPath if os.access(logPath, os.W_OK) else '/tmp/server.log'
     logger = logging.getLogger(name)
-    logger.setLevel(level)
-    
-    # Clear any existing handlers to avoid duplicate logging
-    if logger.hasHandlers():
-        logger.handlers.clear()
-    
+    logger.setLevel(logging.DEBUG)
+    handler = RotatingFileHandler(writable_log_path, maxBytes=1024*1024*10, backupCount=5)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
     logger.addHandler(handler)
-    logger.propagate = False  # Prevent log messages from being propagated to the root logger
-    
     return logger
 
 
