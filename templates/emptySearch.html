@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./static/Styles/search.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="bar">
+        <h1 class="text-center" onclick="(function() {window.location.href = '/';})()">Video Analysis</h1>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Object Search...">
+            <button onclick="search()">Search</button>
+        </div>
+    </div>
+
+    <div class="windowContainer">
+        <div class="container">
+            <h1 id="searchH1" class="text-center">Nothing To Show Right Now</h1>
+            <h3 class="text-center">Try it yourself! <a href="/">Upload video</a></h3>
+        </div>
+    </div>
+
+   
+</body>
+</html>

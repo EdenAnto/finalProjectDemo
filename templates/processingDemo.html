@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Video Analysis</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./static/Styles/processing.css">
+
+    <script>
+    $(document).ready(function () {
+    const status = [
+        "Splitting video into frames",
+        "Looking for objects",
+        "Finishing up"
+    ];
+    const percentage = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+
+    const objects = ["car", "truck","car", "truck","car", "truck","car", "truck","car", "truck","car"];
+
+
+    // Update the status and progress bar with delays
+    $('#status').text(status[0]); // Initial status
+
+    // Step 1: Wait 2 seconds, then change to status[1]
+    setTimeout(() => {
+        $('#status').text(status[1]);
+
+        // Step 2: Start updating the progress bar
+        percentage.forEach((percent, index) => {
+            setTimeout(() => {
+                $('#progress-bar').css('width', percent + '%');
+                $('#updates').text(`Object detected: ${objects[index]}`)
+            }, index * 400); // 400ms delay between each progress update
+        });
+
+        // Step 3: Wait for progress bar to finish, then update to status[2]
+        setTimeout(() => {
+            $('#updates').text('')
+            $('#status').text(status[2]);
+
+            // Step 4: Redirect to '/res' after 2 seconds
+            setTimeout(() => {
+                window.location.href = '/res';
+            }, 2000);
+        }, percentage.length * 400); // Wait for the progress bar to complete
+
+    }, 2000); // Initial 2-second delay
+});
+
+    </script>
+    <!-- <script>
+		var progressStatus='';
+        $(document).ready(function() {
+			progressStatus = document.getElementById('status');
+
+            function nextStep(step) {
+					console.log(step);
+                    var percentage = (step / steps) * 100;
+                    $('#progress-bar').css('width', percentage + '%');
+            };
+
+            var videoName2 = localStorage.getItem('fileName');
+            var videoName = localStorage.getItem('fileName');
+            var steps = 10;
+            var currentStep = 0;
+            var format = localStorage.getItem('format');
+
+            console.log(format)
+            $('#loadMessage').text("Analyzing: " + videoName.split('_')[0]);
+
+            function analyzeVideo(videoName, format) {
+				console.log("analyze call");
+                fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({"fileName": videoName, "format": format})
+                })
+                .then(response => response.json())
+                .then(response => {
+                    if (response.status == 200) {
+                        window.location.href = `/res?videoname=${btoa(videoName)}`;
+                    }
+                    if (response.status == 500) {
+                        window.location.href = './error'
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+
+            function updateVariable(fileName) {
+			console.log("inside");
+				if (progressStatus.innerText == 'Finishing up')
+					return;
+            // const socket = io(`${window.location.protocol}//${window.location.hostname}:5000`);
+
+                fetch(`/updateProgress`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({"fileName": videoName})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Updated variable:', data);
+                    if (data.obj)
+                        document.getElementById('updates').innerText = `Object detected: ${data.obj}`;
+                    progressStatus.innerText = data.status;
+                    nextStep(data.nextStep)
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+
+            function runParallelCalls(videoName, format) {
+                Promise.all([analyzeVideo(videoName, format), updateVariable(videoName2)])
+                    .then(() => {
+                        console.log('Both AJAX calls completed');
+						setInterval(()=> {updateVariable(videoName2);}, 1000);
+                    })
+                    .catch(error => {
+                        console.error('Error in parallel calls:', error);
+                    });
+            }
+            // Run the parallel calls
+            runParallelCalls(videoName, format);            
+        });
+    </script> -->
+</head>
+<body>
+    <div class="bar">
+        <h1 class="text-center">Video Analysis</h1>
+    </div>
+    <div class="container">
+        <div class="loader"></div>
+        <h1 id="loadMessage">Analyzing Demo:</h1>
+        <h4 id="updates"></h4>
+    </div>
+    <div class="progress-container">
+        <h4 id="status"></h4>
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+</body>
+</html>
