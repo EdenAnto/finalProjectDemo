@@ -20,60 +20,83 @@
         </button>
     </div>
     <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+
     <script>
-        localStorage.setItem('dontShowAgain', 'false');
+        if (localStorage.getItem("showCards") === null) {
+                localStorage.setItem("showCards", "false");
+        }
+        if (localStorage.getItem("dontShowAgain") === null) {
+                localStorage.setItem("dontShowAgain", "false");
+        }
+
+        const blankCard = "{{ blankCard }}";
+        content= '';
+        for (let idx = 0; idx < 8; idx++) { // Corrected the loop variable to increment `idx` instead of `i`
+            content += `<div class="card">
+                        <img src="${blankCard}" alt="Soon">
+                        <div class="card-content">
+                            <h3>EDENKING444</h3>
+                        </div>
+                    </div>`;
+}
+
         function openPopup(pdfUrl) {
-            // Check if "Don't show again" is already selected
-            const dontShowAgain = localStorage.getItem('dontShowAgain') === 'true';
+            const dontShowAgain = localStorage.getItem('dontShowAgain') === 'true'; // Check localStorage
             if (dontShowAgain) {
                 console.log("Don't show again is enabled, skipping pop-up.");
                 return;
             }
-    
-            console.log('Opening PDF pop-up with URL:', pdfUrl); // Debugging
-            // Set the PDF source in the iframe
-            document.getElementById('pdfViewer').src = pdfUrl;
-    
-            // Show the pop-up and overlay
+
+            console.log('Opening PDF pop-up with URL:', pdfUrl);
+            document.getElementById('pdfViewer').src = pdfUrl; // Set the PDF source
             document.getElementById('popup').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
         }
-    
+
+        // Function to close the PDF pop-up
         function closePopup() {
-            console.log('Closing PDF pop-up'); // Debugging
-            // Hide the pop-up and overlay
+            console.log('Closing PDF pop-up');
             document.getElementById('popup').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
-    
-            // Clear the iframe source to stop the PDF from loading
-            document.getElementById('pdfViewer').src = '';
-    
-            // Check if "Don't show again" is checked
+            document.getElementById('pdfViewer').src = ''; // Clear the iframe source
+
+            // Check the "Don't show again" checkbox
             const dontShowCheckbox = document.getElementById('dontShowCheckbox');
             if (dontShowCheckbox.checked) {
                 localStorage.setItem('dontShowAgain', 'true');
             }
         }
 
-        function resetDemo(){
+        // Reset demo to allow pop-up and reset localStorage
+        function resetDemo() {
             localStorage.setItem('dontShowAgain', 'false');
-            localStorage.setItem('showCards',false)
-            window.location.reload();
+            localStorage.setItem('showCards', 'false'); // Store as string
+            window.location.href='./';
         }
-    
-        // Automatically open the PDF pop-up on page load
+
         $(document).ready(function () {
-            localStorage.setItem('dontShowAgain', 'false');
+            console.log("show card is " +localStorage.getItem('showCards'))
+            // Initialize localStorage if not already set
+            if (!localStorage.getItem('dontShowAgain')) {
+                localStorage.setItem('dontShowAgain', 'false');
+            }
+            // if (!localStorage.getItem('showCards')) {
+            //     localStorage.setItem('showCards', 'true'); // Default value
+            // }
 
-    
-            // Pass the PDF URL dynamically from Jinja
-            const pdfUrl = "{{ pdf }}";
-
+            // Show the PDF pop-up if "Don't show again" is false
+            const pdfUrl = "{{ pdf }}"; // Replace with your PDF path
             openPopup(pdfUrl);
-        });
 
+            // Handle cards based on showCards value
+            const showCards = localStorage.getItem('showCards') === 'true'; // Check as string
+            if (!showCards) {
+                $('#cardsContainer').html(content); // Replace content dynamically
+            } else {
+                console.log("Rendering default cards.");
+            }
+        });
     </script>
-    
     
     <div class="bar">
         <h1 class="text-center" onclick="(function() {window.location.href = '/';})()">Video Analysis</h1>
@@ -96,13 +119,13 @@
                         pattern="[A-Za-z0-9]+" title="Only letters (A-Z, a-z) and numbers (0-9) are allowed."
                          required>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block" disabled>Upload</button>
+                    <button onclick="window.location.href='./processing'" class="btn btn-primary btn-block" disabled>Upload</button>
                     <div class="demo"><h1>DEMO</h1></div>
                 </form>
             </div>
     
             <div class="rightContent">
-                <div class="image-grid" id="images">
+                <div id="cardsContainer" class="image-grid">
                     {% for card in cards %}
                         {% if not 'blank.png' in card[0] %}
                             {% if card[-1] %}
@@ -116,7 +139,6 @@
                             <img src="{{card[0]}}" alt="{{card[1]}}">
                             <div class="card-content">
                                 <h3>{{card[1].split('_')[0]}}</h3>
-                                <!-- <p>{{card[2]}}</p> -->
                                 </div>
                             </div>
                     {% endfor %}
@@ -139,7 +161,7 @@
         function onClickCard(card) {
             const img = card.querySelector('img');
             const imgSrc = img.src;
-            window.location.href=`/res?videoname=${btoa(img.alt)}`
+            window.location.href=`/res?videoname=${btoa(img.alt)}`;
         }
 
         function search() {
@@ -147,51 +169,6 @@
             if (query != '')
                 window.location.href = `/search?q=${query}`;
         }
-
-        $(document).ready(function() {
-            $('#nameTB').prop('disabled', true);
-            $('.card-processing img').after('<p>Processing</p>');
-            $('#videoFile').on('change', function() {
-                let fileName = $(this).val().split('\\').pop().split('.')[0]; // Get the file name
-                $('#nameTB').val(fileName)
-                $('#nameTB').prop('disabled', false);
-
-            });
-
-            $('#uploadForm').submit(function(event) {
-                //$('#nameTB').prop('disabled', false);
-                event.preventDefault();
-                console.log(this)
-                var formData = new FormData(this);
-                console.log(formData)
-                for (var pair of formData.entries()) {
-                    console.log(pair[0]+ ': ' + pair[1]);
-                }
-                $.ajax({
-                    url: '/upload',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        console.log(response);
-                        if (response.message == 'Exist in server'){
-                            localStorage.setItem('exist', "true");
-                            window.location.href = `/res?videoname=${btoa(response.fileName)}`;
-                        }
-                        else if(response.status == 200) {
-                            localStorage.setItem('fileName', response.fileName);
-                            localStorage.setItem('format', response.format);
-                            window.location.href = '/processing';
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
-                    }
-                });
-            });
-            //addCards();
-        });
     </script>
 </body>
 </html>
