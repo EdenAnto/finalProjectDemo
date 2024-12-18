@@ -14,7 +14,7 @@ load_dotenv()
 
 # ===============================     Server Configuration      ==================================  #
 
-serverLog= setup_logger('server', f'./')
+serverLog= setup_logger('server', f'./tmp')
 serverLog.info('Server has boot started')
 MONGO_URI = os.getenv('MONGO_URI')
 
