@@ -6,7 +6,6 @@ from flask import Flask, render_template, request, jsonify, send_from_directory
 from shutil import rmtree
 from flask_cors import CORS
 from pymongo import MongoClient
-from Configuration.config import setup_logger
 from dotenv import load_dotenv
 
  
@@ -14,8 +13,6 @@ load_dotenv()
 
 # ===============================     Server Configuration      ==================================  #
 
-serverLog= setup_logger('server', f'./tmp')
-serverLog.info('Server has boot started')
 MONGO_URI = os.getenv('MONGO_URI')
 
 app = Flask(__name__, static_folder='static')
@@ -30,7 +27,6 @@ defaultDir= './static/Data/blank.png'
 
 tasks = {}
 
-serverLog.info('Server is ready')
 
 # ===============================             Routers           ==================================  #
 
@@ -302,12 +298,6 @@ def decode64(param):
         return decode
     except:
         return False
-    
-def close_logger(logger):
-    handlers = logger.handlers[:]
-    for handler in handlers:
-        handler.close()
-        logger.removeHandler(handler)
 
 if __name__ == '__main__':
     app.run()
