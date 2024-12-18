@@ -310,4 +310,4 @@ def close_logger(logger):
         logger.removeHandler(handler)
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=True)
+    app.run()
