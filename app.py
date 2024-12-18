@@ -63,7 +63,7 @@ def index():
             i+=1
     except:
         return render_template('index.html', cards=[])
-    return render_template('index.html', cards= cards)
+    return render_template('index.html', cards= cards ,pdf='./static/welcome/welcome.pdf')
 
 @app.route('/res' , methods=['GET'])
 def res():
