@@ -1,5 +1,5 @@
-import random, os, base64
-import sys
+import random, base64
+import sys,os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from flask import Flask, render_template, request, jsonify, send_from_directory
