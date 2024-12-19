@@ -200,12 +200,15 @@
         let values = [];
         // let buttonConstarintJquery = '';
         if(element && dropdownId == 'dropdown-objects' ) {
-            let buttonConstarintJquery = `#${$(element).val()}-constraint`;
+            let constraint_name= ($(element).val()).replaceAll(' ','___')
+            let buttonConstarintJquery = `#${constraint_name}-constraint`;
             if($(buttonConstarintJquery).length == 0 && element.checked)
                 addObjectConstraint($(element).val())
             else{
+                console.log("need to remove")
                 $(buttonConstarintJquery).remove()
-                $(`#${$(element).val()}-constraint-content`).remove()
+                $(`#${constraint_name}-constraint-content`).remove()
+                
             }
                 
         }
