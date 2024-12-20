@@ -44,10 +44,32 @@
                         </div>
                     </div>`;
 }
+        function dateDiffMinutes(date1,date2){
+            let diffInMinutes;
+            try{
+                if (!(date1 instanceof Date) || !(date2 instanceof Date)) {
+                    throw new Error("Invalid date objects provided.");
+                }
+                const time1 = date1.getTime();
+                const time2 = date2.getTime();
+
+                // Calculate the difference in milliseconds
+                const diffInMilliseconds = Math.abs(time2 - time1);
+
+                // Convert milliseconds to minutes
+                diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+            }
+            catch (error){
+                diffInMinutes=3;
+            }
+            
+            return diffInMinutes;
+        }
 
         function openPopup(pdfUrl) {
             const dontShowAgain = localStorage.getItem('dontShowAgain') === 'true'; // Check localStorage
-            if (dontShowAgain) {
+            const validDontShowToken = dateDiffMinutes(new Date(localStorage.getItem('dontShotAgainTime')),new Date()) < 2;
+            if (dontShowAgain && validDontShowToken) {
                 console.log("Don't show again is enabled, skipping pop-up.");
                 return;
             }
@@ -69,6 +91,7 @@
             const dontShowCheckbox = document.getElementById('dontShowCheckbox');
             if (dontShowCheckbox.checked) {
                 localStorage.setItem('dontShowAgain', 'true');
+                localStorage.setItem("dontShowAgainTime", new Date());
             }
         }
 
