@@ -57,18 +57,18 @@
                 const diffInMilliseconds = Math.abs(time2 - time1);
 
                 // Convert milliseconds to minutes
-                diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+                diffInMinutes = Math.floor(diffInMilliseconds / (1000));
             }
             catch (error){
-                diffInMinutes=3;
+                diffInMinutes=121;
             }
-            
+            console.log("time diff is "+ diffInMinutes)
             return diffInMinutes;
         }
 
         function openPopup(pdfUrl) {
             const dontShowAgain = localStorage.getItem('dontShowAgain') === 'true'; // Check localStorage
-            const validDontShowToken = dateDiffMinutes(new Date(localStorage.getItem('dontShotAgainTime')),new Date()) < 2;
+            const validDontShowToken = dateDiffMinutes(new Date(localStorage.getItem('dontShotAgainTime')),new Date()) < 120;
             if (dontShowAgain && validDontShowToken) {
                 console.log("Don't show again is enabled, skipping pop-up.");
                 return;
