@@ -63,7 +63,7 @@ def index():
             i+=1
     except:
         return render_template('index.html', cards=[])
-    return render_template('index.html', cards= cards ,pdf='./static/welcome/welcome.pdf',blankCard=defaultDir)
+    return render_template('index.html', cards= cards,blankCard=defaultDir)
 
 @app.route('/res' , methods=['GET'])
 def res():
@@ -117,7 +117,7 @@ def search():
     else:
         data = getPromptsDB( {"promptDistinct" : query} )
         
-    if not data:
+    if not data and not query:
         return render_template('emptySearch.html')
 
     values = {}

@@ -44,45 +44,19 @@
                         </div>
                     </div>`;
 }
-        function dateDiffMinutes(date1,date2){
-            let diffInMinutes;
-            try{
-                if (!(date1 instanceof Date) || !(date2 instanceof Date)) {
-                    throw new Error("Invalid date objects provided.");
-                }
-                const time1 = date1.getTime();
-                const time2 = date2.getTime();
-
-                // Calculate the difference in milliseconds
-                const diffInMilliseconds = Math.abs(time2 - time1);
-
-                // Convert milliseconds to Minutes
-                diffInMinutes = Math.floor(diffInMilliseconds / (1000*60));
-            }
-            catch (error){
-                diffInMinutes=121;
-            }
-            console.log("time diff is "+ diffInMinutes)
-            return diffInMinutes;
-        }
-
-        function openPopup(pdfUrl) {
+        
+        function openPopup() {
             const dontShowAgain = localStorage.getItem('dontShowAgain') === 'true'; // Check localStorage
-            const validDontShowToken = dateDiffMinutes(new Date(localStorage.getItem('dontShotAgainTime')),new Date()) < 120;
-            if (dontShowAgain && validDontShowToken) {
-                console.log("Don't show again is enabled, skipping pop-up.");
+            if (dontShowAgain) {
                 return;
             }
 
-            console.log('Opening PDF pop-up with URL:', pdfUrl);
-            // document.getElementById('pdfViewer').src = pdfUrl; // Set the PDF source
             document.getElementById('popup').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
         }
 
         // Function to close the PDF pop-up
         function closePopup() {
-            console.log('Closing PDF pop-up');
             document.getElementById('popup').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
             // document.getElementById('pdfViewer').src = ''; // Clear the iframe source
@@ -91,7 +65,6 @@
             const dontShowCheckbox = document.getElementById('dontShowCheckbox');
             if (dontShowCheckbox.checked) {
                 localStorage.setItem('dontShowAgain', 'true');
-                localStorage.setItem("dontShowAgainTime", new Date());
             }
         }
 
@@ -103,25 +76,21 @@
         }
 
         $(document).ready(function () {
-            console.log("show card is " +localStorage.getItem('showCards'))
             // Initialize localStorage if not already set
             if (!localStorage.getItem('dontShowAgain')) {
                 localStorage.setItem('dontShowAgain', 'false');
             }
-            // if (!localStorage.getItem('showCards')) {
-            //     localStorage.setItem('showCards', 'true'); // Default value
-            // }
 
             // Show the PDF pop-up if "Don't show again" is false
-            const pdfUrl = "{{ pdf }}"; // Replace with your PDF path
-            openPopup(pdfUrl);
+            openPopup();
 
             // Handle cards based on showCards value
             const showCards = localStorage.getItem('showCards') === 'true'; // Check as string
             if (!showCards) {
                 $('#cardsContainer').html(content); // Replace content dynamically
-            } else {
-                console.log("Rendering default cards.");
+            }
+            else{
+                $('#searchBtn').prop('disabled', false);
             }
         });
     </script>
@@ -130,7 +99,7 @@
         <h1 class="text-center" onclick="(function() {window.location.href = '/';})()">Video Analysis</h1>
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="Object Search...">
-            <button onclick="search()">Search</button>
+            <button id="searchBtn" onclick="search()" disabled>Search</button>
         </div>
     </div>
     <div class="container">
