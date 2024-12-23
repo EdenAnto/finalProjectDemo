@@ -9,21 +9,23 @@
     <link rel="stylesheet" href="./static/Styles/index.css">
 </head>
 <body>
-    <div id="popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; height: 90%; background: white; border: 1px solid #ccc; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1000;">
-        <div id="pdfContent" style="width: 100%; height: calc(100% - 50px); background-color: white; border: 1px solid #ccc; padding: 20px; box-sizing: border-box; overflow-y: auto;">
-            <div style="background-color: #f9f9f9; border-radius: 10px; padding: 30px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); max-width: 600px; margin: 0 auto; text-align: center;">
-                <h1 style="text-align: center; font-size: 28px; font-weight: bold; margin-bottom: 20px; color: #333;">Video Analyzer</h1>
-                <p style="font-size: 16px; line-height: 1.8; color: #555;">
+    <div id="popup" class="popup">
+        <div id="pdfContent" class="pdf-content">
+            <div class="content-container">
+                <h1 class="content-title">Video Analyzer</h1>
+                <p class="content-description">
                     This site showcases the capabilities of the Video Analyzer project. The system analyzes videos by detecting objects using the YOLO algorithm, generating detailed video statistics, and providing advanced search features for efficient and precise retrieval of video content.
                 </p>
             </div>
-            <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; padding: 20px; flex-wrap: wrap; max-width: 100%; box-sizing: border-box;">
-                <img src="/static/webMedia/homepage.png" alt="Home Page" style="width: 150px; height: 150px; object-fit: contain; border-radius: 10px; background-color: #f0f0f0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                <img src="/static/webMedia/processing.png" alt="Processing" style="width: 150px; height: 150px; object-fit: contain; border-radius: 10px; background-color: #f0f0f0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                <img src="/static/webMedia/result.png" alt="Result" style="width: 150px; height: 150px; object-fit: contain; border-radius: 10px; background-color: #f0f0f0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                <img src="/static/webMedia/search.png" alt="Search" style="width: 150px; height: 150px; object-fit: contain; border-radius: 10px; background-color: #f0f0f0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-            </div>                                
+            <div class="popup-gallery">
+                <img src="/static/webMedia/homepage.png" alt="Home Page" class="popup-gallery-image">
+                <img src="/static/webMedia/processing.png" alt="Processing" class="popup-gallery-image">
+                <img src="/static/webMedia/result.png" alt="Result" class="popup-gallery-image">
+                <img src="/static/webMedia/search.png" alt="Search" class="popup-gallery-image">
+            </div>
         </div>
+    </div>
+    
                 <div id="dontShowContainer">
             <input type="checkbox" id="dontShowCheckbox">
             <label for="dontShowCheckbox">Don't show again</label>
